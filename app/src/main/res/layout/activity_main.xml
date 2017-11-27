@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.lyz.popularmoviesstage1.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android">
-</GridLayout>
+    <GridView
+        android:id="@+id/gv_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:gravity="left"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp">
+    </GridView>
+    <ProgressBar
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="invisible"
+        android:id="@+id/pg_main"/>
+</RelativeLayout>
