@@ -147,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPostExecute(Movie[] movies) {
             mProgressBar.setVisibility(View.INVISIBLE);
            if (movies!=null){
-               mMovieAdapter.setMovies(movies);
                mRecyclerView.setAdapter(mMovieAdapter);
+               mMovieAdapter.setMovies(movies);
                showMoviePictures();
 
            } else {

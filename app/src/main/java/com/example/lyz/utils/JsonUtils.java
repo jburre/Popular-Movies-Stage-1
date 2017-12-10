@@ -20,10 +20,12 @@ public class JsonUtils {
     private static final String RATING="vote_average";
     private static final String DESCRIPTION="overview";
     private static final String POSTER_PATH="poster_path";
+    private static final String RELEASE="release_date";
 
     private static final String IMAGE_RESULT="images";
     private static final String IMAGE_BASEURL="base_url";
     private static final String POSTER_SIZES="poster_sizes";
+
 
     /**
      * method for parsing the data as an array
@@ -78,6 +80,7 @@ public class JsonUtils {
             movie.setDescription(result.getString(DESCRIPTION));
             movie.setRating(result.getDouble(RATING));
             movie.setImagePath(result.getString(POSTER_PATH));
+            movie.setRelease_date(result.getString(RELEASE));
         }
         return movie;
     }

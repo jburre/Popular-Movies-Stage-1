@@ -15,6 +15,7 @@ public class Movie {
     private String totalImagePath;
     private String description;
     private String title;
+    private String release_date;
 
     /**
      * getter method for the id
@@ -112,4 +113,11 @@ public class Movie {
         this.totalImagePath = totalImagePath;
     }
 
+    public void setRelease_date(String date){
+        this.release_date=date;
+    }
+
+    public String getRelease_date() {
+        return release_date;
+    }
 }

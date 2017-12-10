@@ -33,6 +33,7 @@ public class detailsActivity extends AppCompatActivity {
     private TextView mRating;
     private TextView mSummary;
     private ImageView mImageView;
+    private TextView mReleaseView;
 
     /**
      * onCreate method for initialising the views inside the activity
@@ -47,6 +48,7 @@ public class detailsActivity extends AppCompatActivity {
         mRating=(TextView)findViewById(R.id.detail_rating_content);
         mSummary=(TextView)findViewById(R.id.detail_summary_content);
         mImageView=(ImageView)findViewById(R.id.detail_image_view);
+        mReleaseView=(TextView)findViewById(R.id.detail_release_date_content);
 
         Intent intentThatStartedThisActivity=getIntent();
         if (intentThatStartedThisActivity!=null){
@@ -134,6 +136,7 @@ public class detailsActivity extends AppCompatActivity {
                 mTitle.setText(movie.getTitle());
                 mRating.setText(String.valueOf(movie.getRating()));
                 mSummary.setText(movie.getDescription());
+                mReleaseView.setText(movie.getRelease_date());
                 Picasso.with(this.context).load(movie.getTotalImagePath()).into(mImageView);
 
             } else {
