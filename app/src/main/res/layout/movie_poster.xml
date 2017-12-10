@@ -9,5 +9,6 @@
         android:adjustViewBounds="true"
         android:id="@+id/movie_poster_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/alt_image_description" />
 </FrameLayout>

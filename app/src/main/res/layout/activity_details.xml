@@ -29,7 +29,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/alt_image_description" />
 
     <TextView
         android:id="@+id/detail_title"
@@ -93,7 +94,8 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_image_view" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_image_view"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/detail_summary_content"
@@ -101,6 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
         android:text="@string/blindText"

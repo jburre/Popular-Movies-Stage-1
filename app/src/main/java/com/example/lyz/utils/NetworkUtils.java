@@ -3,7 +3,6 @@ package com.example.lyz.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.util.Log;
 
 import com.example.lyz.popularmoviesstage1.BuildConfig;
 import com.example.lyz.popularmoviesstage1.R;

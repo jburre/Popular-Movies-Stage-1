@@ -148,7 +148,7 @@ public class detailsActivity extends AppCompatActivity {
     /**
      * helper method for showing an error message if something went wrong
      */
-    public void showErrorMessage(){
+    private void showErrorMessage(){
         Toast.makeText(this,"An error occured while trying to lad the page",Toast.LENGTH_LONG);
     }
 }

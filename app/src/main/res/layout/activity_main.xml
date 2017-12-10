@@ -6,10 +6,11 @@
     tools:context="com.example.lyz.popularmoviesstage1.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal">
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerview_movie"></android.support.v7.widget.RecyclerView>
+        android:id="@+id/recyclerview_movie" />
     <TextView
         android:id="@+id/main_tv_error"
         android:layout_width="match_parent"
