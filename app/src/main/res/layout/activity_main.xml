@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.example.lyz.popularmoviesstage1.MainActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <GridView
-        android:id="@+id/gv_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal">
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:gravity="left"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp">
-    </GridView>
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerview_movie"></android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/main_tv_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:text="@string/main_error"
+        android:visibility="invisible"
+        android:textSize="24dp"/>
     <ProgressBar
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:visibility="invisible"
-        android:id="@+id/pg_main"/>
-</RelativeLayout>
+        android:id="@+id/pg_main"
+        android:layout_gravity="center"/>
+</FrameLayout>
