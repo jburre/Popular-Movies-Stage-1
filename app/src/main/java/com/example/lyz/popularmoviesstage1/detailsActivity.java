@@ -23,6 +23,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 
+
 public class detailsActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
