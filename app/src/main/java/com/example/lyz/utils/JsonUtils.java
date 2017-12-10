@@ -10,6 +10,9 @@ import org.json.JSONObject;
  * Created by Lyz on 28.11.2017.
  */
 
+/**
+ * {@JsonUtils} helper class for parsing the data received as json
+ */
 public class JsonUtils {
     private static final String RESULT="results";
     private static final String MOVIE_ID="id";
@@ -22,6 +25,12 @@ public class JsonUtils {
     private static final String IMAGE_BASEURL="base_url";
     private static final String POSTER_SIZES="poster_sizes";
 
+    /**
+     * method for parsing the data as an array
+     * @param jsonString the json string retrieved by the network
+     * @return an array of movies based on the json string
+     * @throws JSONException exception
+     */
     public static Movie[]getMovieDatafromJsonString(String jsonString) throws JSONException {
         JSONArray resultArray=null;
         JSONObject totalMovieJson = new JSONObject(jsonString);
@@ -29,6 +38,12 @@ public class JsonUtils {
         return (parseJsonArrayToMovies(resultArray));
     }
 
+    /**
+     * helper method for parsing the json data
+     * @param resultArray the array of movies the user wanted based on his criteria
+     * @return an array of movies
+     * @throws JSONException exception
+     */
     private static Movie[] parseJsonArrayToMovies(JSONArray resultArray) throws JSONException {
         Movie[] movies = null;
         if (resultArray!=null&&resultArray.length()>0){
@@ -47,6 +62,12 @@ public class JsonUtils {
         return movies;
     }
 
+    /**
+     * method for parsing the json data and getting the movie details
+     * @param response the json data retrieved by the network
+     * @return the movie with detailed information for the detail activity
+     * @throws JSONException exception
+     */
     public static Movie getMovieDetailDatafromJsonString(String response) throws JSONException {
         Movie movie=null;
         if (response !=null&&!response.equals("")){
@@ -61,6 +82,12 @@ public class JsonUtils {
         return movie;
     }
 
+    /**
+     * method for parsing the json by the configuration API response
+     * @param response the response of the api as json string
+     * @return a two-dimensional array holding the base url and the size of the poster
+     * @throws JSONException exception
+     */
     public static String[] getConfigfromJsonString(String response) throws JSONException{
         String [] result = new String[2];
         JSONObject config;

@@ -23,7 +23,9 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.net.URL;
 
-
+/**
+ * {@Link detailsActivity} a detailed activity for movie information
+ */
 public class detailsActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
@@ -32,6 +34,10 @@ public class detailsActivity extends AppCompatActivity {
     private TextView mSummary;
     private ImageView mImageView;
 
+    /**
+     * onCreate method for initialising the views inside the activity
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,25 +57,44 @@ public class detailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * launcher method for executing an async task
+     * @param id the id of the movie we want more details of
+     */
     private void loadMovieDetails(String id) {
         new FetchMovieDetailsTask(this).execute(id);
     }
 
+    /**
+     * {@Link FetchMovieDetailsTask} an extension of the AsyncTask class for loading detailed movie data
+     */
     public class FetchMovieDetailsTask extends AsyncTask<String, Void, Movie> {
 
         private Context context;
         private final String TAG = MainActivity.FetchMovieDataTask.class.getSimpleName();
 
+        /**
+         * constructor method
+         * @param context the context of the class for initialising strings resources
+         */
         public FetchMovieDetailsTask(Context context){
             this.context=context;
         }
 
+        /**
+         * method for executing before network task
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
+        /**
+         * method for executing a network connection
+         * @param strings an array of ids for detailed movies
+         * @return
+         */
         @Override
         protected Movie doInBackground(String... strings) {
             if (strings.length==0){
@@ -98,6 +123,10 @@ public class detailsActivity extends AppCompatActivity {
                 }
         }
 
+        /**
+         * method for populating the views with the movie data
+         * @param movie the movie entity with corresponding data
+         */
         @Override
         protected void onPostExecute(Movie movie) {
             mProgressBar.setVisibility(View.INVISIBLE);
@@ -112,6 +141,10 @@ public class detailsActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * helper method for showing an error message if something went wrong
+     */
     public void showErrorMessage(){
         Toast.makeText(this,"An error occured while trying to lad the page",Toast.LENGTH_LONG);
     }

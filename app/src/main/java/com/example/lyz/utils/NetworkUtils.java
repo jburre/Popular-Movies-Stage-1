@@ -25,6 +25,12 @@ public final class NetworkUtils {
     private final static String queryParam="api_key";
     private static String baseDetailsQuery;
 
+    /**
+     * method for generating the URL for querying the movies
+     * @param desiredSorting the desired sort criteria currently only topRated and most popular are featured
+     * @param context the context of the application
+     * @return the URL for the movies based on the search criteria
+     */
     public static URL builtMovieUrl(String desiredSorting, Context context){
         Resources resources = context.getResources();
         URL url = null;
@@ -44,6 +50,12 @@ public final class NetworkUtils {
         return url;
     }
 
+    /**
+     * method for generating the URL of the movie details endpoint of the TMDB API
+     * @param id the id of the movie the details wanted
+     * @param context the context of the application
+     * @return the URL for the detailed movie endpoint of the TMDB API
+     */
     public static URL builtMovieDetailsUrl(String id, Context context){
         Resources resources= context.getResources();
         URL url = null;
@@ -60,6 +72,11 @@ public final class NetworkUtils {
         return url;
     }
 
+    /**
+     * method for creating the url of the configuration API point of the TMDB
+     * @param context the context of the application for getting access to resources
+     * @return the url of the configuration API endpoint
+     */
     public static URL builtConfigURL(Context context) {
         URL url = null;
         basequery=context.getResources().getString(R.string.configBaseQuery);
@@ -75,6 +92,12 @@ public final class NetworkUtils {
 
     }
 
+    /**
+     * method as presented in the udacity course part one
+     * @param url the url the connection needs to be established
+     * @return a string representation of the data the connection retrieves
+     * @throws IOException an exception if there was not data connection or the data could not be retrieved
+     */
     public static String getNetworkResponse(URL url)throws IOException{
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
         try {
