@@ -5,10 +5,13 @@ package com.example.lyz.entities;
  * Created by Lyz on 28.11.2017.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * an movie class representing the wanted data and making it easy to store
  */
-public class Movie {
+public class Movie implements Parcelable{
     private long id;
     private double rating;
     private String imagePath;
@@ -16,6 +19,32 @@ public class Movie {
     private String description;
     private String title;
     private String release_date;
+
+    public Movie(){
+        super();
+    }
+
+    protected Movie(Parcel in) {
+        id = in.readLong();
+        rating = in.readDouble();
+        imagePath = in.readString();
+        totalImagePath = in.readString();
+        description = in.readString();
+        title = in.readString();
+        release_date = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     /**
      * getter method for the id
@@ -119,5 +148,21 @@ public class Movie {
 
     public String getRelease_date() {
         return release_date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeDouble(rating);
+        parcel.writeString(title);
+        parcel.writeString(totalImagePath);
+        parcel.writeString(description);
+        parcel.writeString(imagePath);
+        parcel.writeString(release_date);
     }
 }
