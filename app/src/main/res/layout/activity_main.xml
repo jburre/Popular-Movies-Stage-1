@@ -2,14 +2,14 @@
 <FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="com.example.lyz.popularmoviesstage1.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/recyclerview_movie" />
     <TextView
         android:id="@+id/main_tv_error"
