@@ -20,10 +20,17 @@ public class Movie implements Parcelable{
     private String title;
     private String release_date;
 
+    /**
+     * basic constructor
+     */
     public Movie(){
         super();
     }
 
+    /**
+     * implemented parcelable method
+     * @param in an Parcel that needs to be parsed
+     */
     protected Movie(Parcel in) {
         id = in.readLong();
         rating = in.readDouble();
@@ -34,12 +41,25 @@ public class Movie implements Parcelable{
         release_date = in.readString();
     }
 
+    /**
+     * necessary CREATOR for Parcelable
+     */
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        /**
+         * creates a Movie by a parcel
+         * @param in
+         * @return
+         */
         @Override
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
         }
 
+        /**
+         * creator method for movie array
+         * @param size desired size
+         * @return a movie array
+         */
         @Override
         public Movie[] newArray(int size) {
             return new Movie[size];
@@ -150,11 +170,20 @@ public class Movie implements Parcelable{
         return release_date;
     }
 
+    /**
+     * content describer
+      * @return currently 0
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * parcel writer method
+     * @param parcel the parcel by the movie will be created
+     * @param i unhandled
+     */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(id);
