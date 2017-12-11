@@ -19,7 +19,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        app:layout_constraintVertical_bias="0.498"
+        android:visibility="invisible"/>
 
     <ImageView
         android:id="@+id/detail_image_view"
@@ -30,7 +31,8 @@
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/alt_image_description" />
+        android:contentDescription="@string/alt_image_description"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_title"
@@ -57,7 +59,8 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detail_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/detail_title" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_title"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_rating"
@@ -71,7 +74,8 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detail_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/detail_title_content" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_title_content"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_rating_content"
@@ -84,7 +88,8 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detail_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/detail_rating" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_rating"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_summary"
@@ -97,7 +102,8 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detail_image_view"
-        android:layout_marginLeft="8dp" />
+        android:layout_marginLeft="8dp"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_summary_content"
@@ -110,7 +116,8 @@
         android:fontFamily="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_summary" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_summary"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_release_date"
@@ -124,7 +131,8 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detail_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/detail_rating_content" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_rating_content"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/detail_release_date_content"
@@ -136,5 +144,6 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/detail_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/detail_release_date" />
+        app:layout_constraintTop_toBottomOf="@+id/detail_release_date"
+        android:visibility="visible"/>
 </android.support.constraint.ConstraintLayout>
