@@ -2,11 +2,18 @@ package com.example.lyz.popularmoviesstage1;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.lyz.entities.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +55,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
         String imagePath=movies[position].getTotalImagePath();
-        Picasso.with(this.context).load(imagePath).into(holder.moviePoster);
+        ImageView imageView = holder.moviePoster;
+        Glide.with(context).load(imagePath)
+                .priority(Priority.IMMEDIATE)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .dontAnimate()
+                .into(imageView);//Picasso.with(this.context).load(imagePath).into(holder.moviePoster);
     }
 
     /**
