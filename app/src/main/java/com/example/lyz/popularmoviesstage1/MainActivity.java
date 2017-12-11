@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(layoutManager);
         mMovieAdapter=new MovieAdapter(this);
-
+        mRecyclerView.setAdapter(mMovieAdapter);
         try{
             loadMovieData(getString(R.string.sortOrderTopRated));
         } catch (Exception e){
@@ -147,10 +147,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPostExecute(Movie[] movies) {
             mProgressBar.setVisibility(View.INVISIBLE);
            if (movies!=null){
-               mRecyclerView.setAdapter(mMovieAdapter);
-               mMovieAdapter.setMovies(movies);
                showMoviePictures();
-
+               mMovieAdapter.setMovies(movies);
            } else {
                showErrorMessage();
            }
