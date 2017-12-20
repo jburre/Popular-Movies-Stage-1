@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lyz.asyncTasks.FetchMovieDataTask;
 import com.example.lyz.entities.Movie;
 import com.example.lyz.utils.ImagePathHelper;
 import com.example.lyz.utils.JsonUtils;
@@ -24,7 +25,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.net.URL;
 
-public class detailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private TextView mTitle;
@@ -72,7 +73,7 @@ public class detailsActivity extends AppCompatActivity {
     public class FetchMovieDetailsTask extends AsyncTask<String, Void, Movie> {
 
         private Context context;
-        private final String TAG = MainActivity.FetchMovieDataTask.class.getSimpleName();
+        private final String TAG = FetchMovieDataTask.class.getSimpleName();
 
         public FetchMovieDetailsTask(Context context){
             this.context=context;
