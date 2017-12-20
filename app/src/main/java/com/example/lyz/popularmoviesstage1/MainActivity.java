@@ -41,10 +41,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
 
-    //https://stackoverflow.com/questions/28236390/recyclerview-store-restore-state-between-activities
-    private static final String LAYOUT_STATE= "LAYOUT_STATE";
-    private static Bundle mState;
-
     /**
      * method for creating the activity
      * @param savedInstanceState the saved state
@@ -89,14 +85,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     /**
      * onClick method for responding to clicks of the user and leading to a detailed activity
-     * @param id the id of the corresponding movie which is needed for the detailactivity
+     * @param movie the id of the corresponding movie which is needed for the detailactivity
      */
     @Override
-    public void onClick(long id) {
+    public void onClick(Movie movie) {
         Context context = this;
         Class destination = DetailsActivity.class;
         Intent startIntent= new Intent(context, destination);
-        startIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(id));
+        startIntent.putExtra("movie", movie);
         startActivity(startIntent);
     }
 
@@ -151,25 +147,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mState=new Bundle();
-        Parcelable currentState=mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mState.putParcelable(LAYOUT_STATE,currentState);
-    }
-
-    //TODO Bug: Rotation leads to old sort order instead of new one
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mState!=null){
-            Parcelable oldState = mState.getParcelable(LAYOUT_STATE);
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(oldState);
         }
     }
 

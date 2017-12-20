@@ -80,7 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * interface for click handling
      */
     public interface MovieAdapterOnClickHandler {
-        void onClick(long id);
+        void onClick(Movie movie);
     }
 
     /**
@@ -122,8 +122,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
          */
         public void onClick(View view) {
             int position=getAdapterPosition();
-            long id = movies[position].getId();
-            mClickHandler.onClick(id);
+            Movie movie = movies[position];
+            mClickHandler.onClick(movie);
         }
     }
 

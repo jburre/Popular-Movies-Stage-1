@@ -58,6 +58,7 @@ public class JsonUtils {
                 movie.setRating(result.getDouble(RATING));
                 movie.setTitle(result.getString(TITLE));
                 movie.setImagePath(result.getString(POSTER_PATH));
+                movie.setReleaseDate(result.getString(RELEASE));
                 movies[i]=movie;
             }
         }
@@ -80,7 +81,7 @@ public class JsonUtils {
             movie.setDescription(result.getString(DESCRIPTION));
             movie.setRating(result.getDouble(RATING));
             movie.setImagePath(result.getString(POSTER_PATH));
-            movie.setRelease_date(result.getString(RELEASE));
+            movie.setReleaseDate(result.getString(RELEASE));
         }
         return movie;
     }

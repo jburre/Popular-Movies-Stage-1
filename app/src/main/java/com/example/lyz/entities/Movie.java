@@ -7,6 +7,7 @@ package com.example.lyz.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * an movie class representing the wanted data and making it easy to store
@@ -18,7 +19,8 @@ public class Movie implements Parcelable{
     private String totalImagePath;
     private String description;
     private String title;
-    private String release_date;
+
+    private String releaseDate;
 
     /**
      * basic constructor
@@ -34,11 +36,11 @@ public class Movie implements Parcelable{
     protected Movie(Parcel in) {
         id = in.readLong();
         rating = in.readDouble();
-        imagePath = in.readString();
+        title = in.readString();
         totalImagePath = in.readString();
         description = in.readString();
-        title = in.readString();
-        release_date = in.readString();
+        imagePath = in.readString();
+        releaseDate = in.readString();
     }
 
     /**
@@ -48,7 +50,7 @@ public class Movie implements Parcelable{
         /**
          * creates a Movie by a parcel
          * @param in
-         * @return
+         * @return a movie objcet
          */
         @Override
         public Movie createFromParcel(Parcel in) {
@@ -162,12 +164,12 @@ public class Movie implements Parcelable{
         this.totalImagePath = totalImagePath;
     }
 
-    public void setRelease_date(String date){
-        this.release_date=date;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public String getRelease_date() {
-        return release_date;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     /**
@@ -186,12 +188,29 @@ public class Movie implements Parcelable{
      */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(id);
-        parcel.writeDouble(rating);
-        parcel.writeString(title);
-        parcel.writeString(totalImagePath);
-        parcel.writeString(description);
-        parcel.writeString(imagePath);
-        parcel.writeString(release_date);
+        parcel.writeLong(this.id);
+        parcel.writeDouble(this.rating);
+        parcel.writeString(this.title);
+        parcel.writeString(this.totalImagePath);
+        parcel.writeString(this.description);
+        parcel.writeString(this.imagePath);
+        parcel.writeString(this.releaseDate);
+    }
+
+    /**
+     * generic toString method for debugging purpose currently
+     * @return a string representation of the movie object
+     */
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", rating=" + rating +
+                ", imagePath='" + imagePath + '\'' +
+                ", totalImagePath='" + totalImagePath + '\'' +
+                ", description='" + description + '\'' +
+                ", title='" + title + '\'' +
+                ", release_date='" + releaseDate + '\'' +
+                '}';
     }
 }
