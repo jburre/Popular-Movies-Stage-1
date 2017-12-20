@@ -2,7 +2,10 @@ package com.example.lyz.popularmoviesstage1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lyz.asyncTasks.AsyncTaskCompleteListener;
+import com.example.lyz.asyncTasks.FetchMovieDataTask;
 import com.example.lyz.entities.Movie;
 import com.example.lyz.utils.ImagePathHelper;
 import com.example.lyz.utils.JsonUtils;
@@ -36,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
 
+    //https://stackoverflow.com/questions/28236390/recyclerview-store-restore-state-between-activities
+    private static final String LAYOUT_STATE= "LAYOUT_STATE";
+    private static Bundle mState;
+
     /**
      * method for creating the activity
      * @param savedInstanceState the saved state
@@ -48,16 +57,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mErrorView=(TextView)findViewById(R.id.main_tv_error);
         mRecyclerView=(RecyclerView)findViewById(R.id.recyclerview_movie);
         mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mMovieAdapter=new MovieAdapter(this);
-        mRecyclerView.setAdapter(mMovieAdapter);
-        try{
-            loadMovieData(getString(R.string.sortOrderTopRated));
-        } catch (Exception e){
-            Toast.makeText(this,R.string.main_loading_error,Toast.LENGTH_LONG);
-        }
-
+        GridLayoutManager layoutManager;
+            layoutManager = new GridLayoutManager(this, 2);
+            mRecyclerView.setLayoutManager(layoutManager);
+            mMovieAdapter=new MovieAdapter(this);
+            mRecyclerView.setAdapter(mMovieAdapter);
+            try{
+                loadMovieData(getString(R.string.sortOrderTopRated));
+            } catch (Exception e){
+                Toast.makeText(this,R.string.main_loading_error,Toast.LENGTH_LONG);
+            }
     }
 
     /**
@@ -65,7 +74,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
      * @param sortOrder
      */
     private void loadMovieData(String sortOrder){
-        new FetchMovieDataTask(this).execute(sortOrder);
+
+        //Network check based on https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected=activeNetwork!=null&&activeNetwork.isConnectedOrConnecting();
+        if (isConnected==true){
+            new FetchMovieDataTask(this, new FetchMovieDataTaskListener()).execute(sortOrder);
+        }
+        else {
+            showErrorMessage();
+        }
     }
 
     /**
@@ -75,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public void onClick(long id) {
         Context context = this;
-        Class destination = detailsActivity.class;
+        Class destination = DetailsActivity.class;
         Intent startIntent= new Intent(context, destination);
         startIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(id));
         startActivity(startIntent);
@@ -84,74 +103,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     /**
      * An extension of the AsyncTask class for getting the data from the website
      */
-    public class FetchMovieDataTask extends AsyncTask<String, Void, Movie[]> {
-
-        private Context context;
-        private final String TAG = FetchMovieDataTask.class.getSimpleName();
-
-        /**
-         * constructor for class
-         * @param context context of the activity for getting resources
-         */
-        public FetchMovieDataTask(Context context){
-            this.context=context;
-        }
-
-        /**
-         * method for executing before loading data
-         */
+    private class FetchMovieDataTaskListener implements AsyncTaskCompleteListener<Movie[]> {
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+        public void onPreExecuting() {
             mProgressBar.setVisibility(View.VISIBLE);
         }
 
-        /**
-         * method for loading data from the TMDB website
-         * @param strings the wanted sortorder, currently only toprated or mostpopular
-         * @return an array of movies based on the sort criteria
-         */
         @Override
-        protected Movie[] doInBackground(String... strings) {
-            if (strings.length==0){
-                return null;
-            }
-            String sortOrder=strings[0];
-            URL movieUrl = NetworkUtils.builtMovieUrl(sortOrder, context);
-            URL configURL= NetworkUtils.builtConfigURL(context);
-            String response=null;
-            String[]configs=new String[2];
-            Movie[] movies=null;
-            try {
-                response = NetworkUtils.getNetworkResponse(movieUrl);
-                movies = JsonUtils.getMovieDatafromJsonString(response);
-                response=NetworkUtils.getNetworkResponse(configURL);
-                configs=JsonUtils.getConfigfromJsonString(response);
-                movies= ImagePathHelper.builtTotalImagePaths(movies,configs);
-                Log.d(TAG,response);
-                return movies;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        /**
-         * method for handling the data after achieving it from the website
-         * @param movies the movie array based on the data retrieved
-         */
-        @Override
-        protected void onPostExecute(Movie[] movies) {
+        public void onTaskComplete(Movie[] movies) {
             mProgressBar.setVisibility(View.INVISIBLE);
-           if (movies!=null){
-               showMoviePictures();
-               mMovieAdapter.setMovies(movies);
-           } else {
-               showErrorMessage();
-           }
+            if (movies!=null){
+                showMoviePictures();
+                mMovieAdapter.setMovies(movies);
+            } else {
+                showErrorMessage();
+            }
         }
     }
 
@@ -185,6 +151,25 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             return true;
         } else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mState=new Bundle();
+        Parcelable currentState=mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mState.putParcelable(LAYOUT_STATE,currentState);
+    }
+
+    //TODO Bug: Rotation leads to old sort order instead of new one
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mState!=null){
+            Parcelable oldState = mState.getParcelable(LAYOUT_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(oldState);
         }
     }
 
