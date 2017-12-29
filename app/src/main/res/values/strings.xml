@@ -10,6 +10,7 @@
     <!--main activity texts -->
     <string name="main_error">An error occurred while loading the page</string>
     <string name="main_loading_error">It seems you do not have an internet connection :(</string>
+    <!-- details activity data resources-->
 
     <!--query url for database connection -->
     <string name="baseQueryPopularMovies">https://api.themoviedb.org/3/movie/popular</string>
@@ -18,11 +19,16 @@
     <string name="baseQueryMovieDetails">https://api.themoviedb.org/3/movie/</string>
     <string name="queryParamAPIkey">api_key</string>
 
+    <!-- details activity data resources-->
+    <string name="baseYoutubeURL">https://www.youtube.com/</string>
+    <string name="youtubeQueryParam">watch?v=</string>
+
     <!-- properties for details activity-->
     <string name="detailView_title">Title</string>
     <string name="detailView_rating">Rating</string>
     <string name="detailView_overview">Summary</string>
     <string name="detailView_releaseDate">Release Date</string>
+    <string name="trailerBasicString">Movie Trailer</string>
 
     <string name="alt_image_description">the poster image of the movie is displayed here</string>
 </resources>
