@@ -71,6 +71,22 @@ public final class NetworkUtils {
         return url;
     }
 
+    public static URL builtMovieTrailerURL(String movieId, Context context) {
+        Resources resources = context.getResources();
+        URL url = null;
+        baseDetailsQuery=resources.getString(R.string.baseQueryMovieDetails);
+        baseDetailsQuery+=movieId+"/videos";
+        Uri uri = Uri.parse(baseDetailsQuery).buildUpon()
+                .appendQueryParameter(queryParam, BuildConfig.THE_MOVIE_DB_API_TOKEN)
+                .build();
+        try{
+            url=new URL(uri.toString());
+        } catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
+    }
+
     /**
      * method for creating the url of the configuration API point of the TMDB
      * @param context the context of the application for getting access to resources
@@ -115,6 +131,4 @@ public final class NetworkUtils {
             urlConnection.disconnect();
         }
     }
-
-
 }

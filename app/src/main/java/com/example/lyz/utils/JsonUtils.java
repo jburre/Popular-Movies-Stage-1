@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Lyz on 28.11.2017.
  */
@@ -65,6 +67,22 @@ public class JsonUtils {
         return movies;
     }
 
+    public static ArrayList<String> getMovieTrailerDataFromJsonString(String response) throws JSONException {
+        if (response!=null && response.length()!=0){
+            JSONObject totalTrailersJson = new JSONObject(response);
+            JSONArray resultArray=totalTrailersJson.getJSONArray(RESULT);
+            ArrayList<String> keys= new ArrayList<>();
+            for (int i=0;i<resultArray.length();i++){
+                JSONObject tempMovie = (JSONObject) resultArray.get(i);
+                if (("Trailer").equals(tempMovie.getString("type"))&&("YouTube").equals(tempMovie.getString("site"))){
+                    keys.add(tempMovie.getString("key"));
+                }
+            }
+            return keys;
+        }
+        return null;
+    }
+
     /**
      * method for parsing the json data and getting the movie details
      * @param response the json data retrieved by the network
@@ -104,6 +122,4 @@ public class JsonUtils {
         }
         return result;
     }
-
-
 }
