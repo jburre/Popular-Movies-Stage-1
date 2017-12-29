@@ -34,6 +34,5 @@ public class FavoriteMovieContract {
 
         public static final String COLUMN_RELEASEDATE="releaseDate";
 
-
     }
 }
