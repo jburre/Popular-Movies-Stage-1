@@ -29,6 +29,6 @@
     <string name="detailView_overview">Summary</string>
     <string name="detailView_releaseDate">Release Date</string>
     <string name="trailerBasicString">Movie Trailer</string>
-
+    <string name="reviewPlaceHolder">There seems to be no review available yet. Maybe write your own</string>
     <string name="alt_image_description">the poster image of the movie is displayed here</string>
 </resources>

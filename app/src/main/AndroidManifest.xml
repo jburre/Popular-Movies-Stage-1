@@ -21,6 +21,10 @@
         <activity
             android:name=".DetailsActivity"
             android:parentActivityName=".MainActivity" />
+        <provider
+            android:authorities="com.example.lyz.data"
+            android:name="com.example.lyz.data.FavoriteMovieContentProvider"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

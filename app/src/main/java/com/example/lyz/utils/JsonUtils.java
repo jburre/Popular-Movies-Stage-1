@@ -83,6 +83,24 @@ public class JsonUtils {
         return null;
     }
 
+    public static String[] getMovieReviewsFromJsonString(String response) throws JSONException {
+        String [] reviews=null;
+        if (response!=null && response.length()!=0){
+            JSONObject result = new JSONObject( response);
+            JSONArray resultArray = result.getJSONArray(RESULT);
+            if (resultArray.length()==0){
+                return null;
+            } else {
+                reviews=new String[resultArray.length()];
+                for (int i=0;i<resultArray.length();i++){
+                    JSONObject review =(JSONObject) resultArray.get(i);
+                    reviews[i]=review.getString("content");
+                }
+            }
+        }
+        return reviews;
+    }
+
     /**
      * method for parsing the json data and getting the movie details
      * @param response the json data retrieved by the network

@@ -1,5 +1,6 @@
 package com.example.lyz.popularmoviesstage1;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -23,7 +24,9 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.lyz.asyncTasks.AsyncTaskCompleteListener;
 import com.example.lyz.asyncTasks.FetchMovieDataTask;
+import com.example.lyz.asyncTasks.FetchMovieReviewsTask;
 import com.example.lyz.asyncTasks.FetchMovieTrailerTask;
+import com.example.lyz.data.FavoriteMovieContract;
 import com.example.lyz.entities.Movie;
 import com.example.lyz.utils.ImagePathHelper;
 import com.example.lyz.utils.JsonUtils;
@@ -53,6 +56,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     private RecyclerView mTrailerView;
     private TrailerAdapter mTrailerAdapter;
 
+    private RecyclerView mReviewsView;
+    private ReviewsAdapter mReviewsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +81,12 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         mTrailerView.setLayoutManager(layoutManager);
         mTrailerView.setAdapter(mTrailerAdapter);
 
+        mReviewsView= (RecyclerView)findViewById(R.id.recyclerview_reviews);
+        LinearLayoutManager reviewLayoutManager;
+        reviewLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mReviewsView.setLayoutManager(reviewLayoutManager);
+        mReviewsAdapter=new ReviewsAdapter();
+
         Intent intentThatStartedThisActivity=getIntent();
         if (intentThatStartedThisActivity!=null){
             if(intentThatStartedThisActivity.hasExtra("movie")){
@@ -91,6 +103,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
                     mProgressBar.setVisibility(View.VISIBLE);
                     loadMovieImage(movie);
                     loadTrailer(movie.getId());
+                    loadReviews(movie.getId());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     showErrorMessage();
@@ -100,6 +113,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
                 showErrorMessage();
             }
         }
+    }
+
+    private void loadReviews(long id) {
+        new FetchMovieReviewsTask(this, new FetchMovieReviewsTaskListener()).execute(String.valueOf(id));
     }
 
     private void loadTrailer(long id) {
@@ -153,6 +170,33 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
                 showErrorMessage();
             }
 
+        }
+    }
+
+    private class FetchMovieReviewsTaskListener implements AsyncTaskCompleteListener <String[]>{
+
+        @Override
+        public void onPreExecuting() {
+            //nothing to do since both tasks are already wrapped in a loading
+        }
+
+        @Override
+        public void onTaskComplete(String[] result) {
+            if (result.length!=0){
+                mReviewsAdapter.setReviews(result);
+            } else{
+                showErrorMessage();
+            }
+        }
+
+    }
+
+    public void onFavoriteSelected(View view){
+        ContentValues contentValues = new ContentValues();
+        //contentValues.put();
+        Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,contentValues);
+        if (uri!=null){
+            Toast.makeText(getBaseContext(), "Movie inserted", Toast.LENGTH_LONG).show();
         }
     }
 }
