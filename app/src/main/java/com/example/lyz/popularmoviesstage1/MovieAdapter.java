@@ -1,6 +1,7 @@
 package com.example.lyz.popularmoviesstage1;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             return 0;
         }
         return movies.length;
+    }
+
+    public void swapCursor(Cursor cursor) {
+
     }
 
     /**

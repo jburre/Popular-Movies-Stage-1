@@ -14,21 +14,21 @@ public class FavoriteMovieDbHelper extends SQLiteOpenHelper {
 
     private static final int VERSION=1;
 
-    FavoriteMovieDbHelper(Context context){
+    public FavoriteMovieDbHelper(Context context){
         super(context, DATABASE_NAME,null, VERSION );
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String CREATE_TABLE = "CREATE TABLE " + FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME+" ("+
-                FavoriteMovieContract.FavoriteMovieEntry._ID+" INTEGER PRIMARY KEY, "+
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID +" INTEGER NOT NULL, "+
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING+ " DOUBLE PRECISION NOT NULL, "+
+                FavoriteMovieContract.FavoriteMovieEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID +" TEXT NOT NULL, "+
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING+ " TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH+" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH+" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION+" TEXT NOT NULL, "+
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE+" TEXT NOT NULL, "+
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING+" TEXT NOT NULL);";
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE+" TEXT NOT NULL "+
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE+" TEXT NOT NULL);";
         sqLiteDatabase.execSQL(CREATE_TABLE);
     }
 

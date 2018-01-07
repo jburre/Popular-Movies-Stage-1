@@ -1,7 +1,11 @@
 package com.example.lyz.popularmoviesstage1;
 
+import android.app.LoaderManager;
+import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.lyz.asyncTasks.AsyncTaskCompleteListener;
 import com.example.lyz.asyncTasks.FetchMovieDataTask;
+import com.example.lyz.data.FavoriteMovieContract;
 import com.example.lyz.entities.Movie;
 import com.example.lyz.utils.ImagePathHelper;
 import com.example.lyz.utils.JsonUtils;
@@ -34,12 +39,15 @@ import java.net.URL;
 /**
  * {@Link MainActivity} class for the main activity of the app
  */
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler
+,LoaderManager.LoaderCallbacks<Cursor>{
 
     private ProgressBar mProgressBar;
     private TextView mErrorView;
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+    private static final int MOVIE_LOADER_ID=0;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     /**
      * method for creating the activity
@@ -83,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
+    private void loadMovieDataFromDatabase() {
+        //getSupportLoaderManager().initLoader(MOVIE_LOADER_ID,null,this);
+    }
+
     /**
      * onClick method for responding to clicks of the user and leading to a detailed activity
      * @param movie the id of the corresponding movie which is needed for the detailactivity
@@ -96,18 +108,63 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         startActivity(startIntent);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            Cursor mMovieData=null;
+
+            @Override
+            protected void onStartLoading() {
+                showLoadingScreen();
+                if (mMovieData!=null){
+                    deliverResult(mMovieData);
+                } else{
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,null, null, null,null);
+                } catch (Exception e){
+                    Log.e(TAG, "Failed to retrieve data from database");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public void deliverResult(Cursor data) {
+                mMovieData=data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        mMovieAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mMovieAdapter.swapCursor(null);
+    }
+
     /**
      * An extension of the AsyncTask class for getting the data from the website
      */
     private class FetchMovieDataTaskListener implements AsyncTaskCompleteListener<Movie[]> {
         @Override
         public void onPreExecuting() {
-            mProgressBar.setVisibility(View.VISIBLE);
+            showLoadingScreen();
         }
 
         @Override
         public void onTaskComplete(Movie[] movies) {
-            mProgressBar.setVisibility(View.INVISIBLE);
+            endLoadingScreen();
             if (movies!=null){
                 showMoviePictures();
                 mMovieAdapter.setMovies(movies);
@@ -115,6 +172,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 showErrorMessage();
             }
         }
+    }
+
+    private void showLoadingScreen(){
+        mProgressBar.setVisibility(View.VISIBLE);
+        mErrorView.setVisibility(View.INVISIBLE);
+    }
+
+    private void endLoadingScreen(){
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mErrorView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -145,7 +212,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     } else if (item.getItemId()==R.id.menu_item_topRated){
             loadMovieData(getString(R.string.sortOrderTopRated));
             return true;
-        } else {
+        }
+        else if (item.getItemId()==R.id.menu_item_favorites){
+            loadMovieDataFromDatabase();
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }

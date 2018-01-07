@@ -41,7 +41,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
     public void onBindViewHolder(TrailerAdapterViewHolder holder, int position) {
         String key = keys.get(position);
         TextView textView = holder.mTrailerTextView;
-        textView.append(" "+position);
+        textView.append(" "+position+1);
     }
 
     @Override

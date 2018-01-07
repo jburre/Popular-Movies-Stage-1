@@ -59,6 +59,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     private RecyclerView mReviewsView;
     private ReviewsAdapter mReviewsAdapter;
 
+    private Movie movie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +88,12 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         reviewLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mReviewsView.setLayoutManager(reviewLayoutManager);
         mReviewsAdapter=new ReviewsAdapter();
+        mReviewsView.setAdapter(mReviewsAdapter);
 
         Intent intentThatStartedThisActivity=getIntent();
         if (intentThatStartedThisActivity!=null){
             if(intentThatStartedThisActivity.hasExtra("movie")){
-                Movie movie = intentThatStartedThisActivity.getParcelableExtra("movie");
+                this.movie = intentThatStartedThisActivity.getParcelableExtra("movie");
                 Log.d("MOVIE:",movie.toString());
                 mTitle.setText(movie.getTitle());
                 mRating.setText(String.valueOf(movie.getRating()));
@@ -193,7 +196,13 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
     public void onFavoriteSelected(View view){
         ContentValues contentValues = new ContentValues();
-        //contentValues.put();
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID, String.valueOf(movie.getId()));
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION,movie.getDescription());
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING, String.valueOf(movie.getRating()));
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH, movie.getImagePath());
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH, movie.getTotalImagePath());
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE,movie.getReleaseDate());
+        contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE, movie.getTitle());
         Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,contentValues);
         if (uri!=null){
             Toast.makeText(getBaseContext(), "Movie inserted", Toast.LENGTH_LONG).show();

@@ -2,10 +2,12 @@
     <string name="app_name">PopularMoviesStage1</string>
     <string name="menu_item_popular">Most popular</string>
     <string name="menu_item_toprate">Top rated</string>
+    <string name="menu_item_favorite">Favorites</string>
 
     <!-- sort order preferences-->
     <string name="sortOrderTopRated">topRated</string>
     <string name="sortOrderPopular">popular</string>
+    <string name="sortOrderFavorite">favorites</string>
 
     <!--main activity texts -->
     <string name="main_error">An error occurred while loading the page</string>
