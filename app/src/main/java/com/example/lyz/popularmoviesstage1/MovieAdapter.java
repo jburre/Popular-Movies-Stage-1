@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.lyz.data.FavoriteMovieContract;
 import com.example.lyz.entities.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +32,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private final MovieAdapterOnClickHandler mClickHandler;
     private Context context;
+
+    private Cursor mCursor;
 
     /**
      * method for creating the viewholder
@@ -78,7 +81,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     }
 
     public void swapCursor(Cursor cursor) {
-
+        if (cursor!=mCursor){
+            this.mCursor=cursor;
+            Movie []tempMovies = new Movie[mCursor.getCount()];
+            int idIndex= mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID);
+            int releaseIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE);
+            int imagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH);
+            int ratingIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING);
+            int totalImagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH);
+            int titleIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE);
+            int descriptionIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION);
+            for (int i=0;i<mCursor.getCount();i++){
+                mCursor.moveToPosition(i);
+                tempMovies[i].setId(Long.valueOf(mCursor.getString(idIndex)));
+                tempMovies[i].setReleaseDate(mCursor.getString(releaseIndex));
+                tempMovies[i].setImagePath(mCursor.getString(imagePathIndex));
+                tempMovies[i].setTotalImagePath(mCursor.getString(totalImagePathIndex));
+                tempMovies[i].setRating(Double.valueOf(mCursor.getString(ratingIndex)));
+                tempMovies[i].setTitle(mCursor.getString(titleIndex));
+                tempMovies[i].setDescription(mCursor.getString(descriptionIndex));
+            }
+            this.setMovies(tempMovies);
+        }
     }
 
     /**

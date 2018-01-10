@@ -3,6 +3,7 @@ package com.example.lyz.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Lyz on 22.12.2017.
@@ -21,14 +22,15 @@ public class FavoriteMovieDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String CREATE_TABLE = "CREATE TABLE " + FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME+" ("+
-                FavoriteMovieContract.FavoriteMovieEntry._ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                FavoriteMovieContract.FavoriteMovieEntry._ID+" INTEGER PRIMARY KEY, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID +" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING+ " TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH+" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH+" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION+" TEXT NOT NULL, "+
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE+" TEXT NOT NULL "+
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE+" TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE+" TEXT NOT NULL);";
+        Log.i(DATABASE_NAME, "Database created with following string: "+CREATE_TABLE);
         sqLiteDatabase.execSQL(CREATE_TABLE);
     }
 

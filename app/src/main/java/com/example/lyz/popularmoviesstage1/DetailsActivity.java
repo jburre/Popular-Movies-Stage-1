@@ -185,10 +185,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
         @Override
         public void onTaskComplete(String[] result) {
-            if (result.length!=0){
-                mReviewsAdapter.setReviews(result);
+            if (result==null||result.length==0){
+                //showErrorMessage();
             } else{
-                showErrorMessage();
+                mReviewsAdapter.setReviews(result);
             }
         }
 
@@ -205,7 +205,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE, movie.getTitle());
         Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,contentValues);
         if (uri!=null){
-            Toast.makeText(getBaseContext(), "Movie inserted", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Movie inserted with uri: "+uri, Toast.LENGTH_LONG).show();
         }
     }
 }

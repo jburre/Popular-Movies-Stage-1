@@ -1,15 +1,13 @@
 package com.example.lyz.popularmoviesstage1;
 
-import android.app.LoaderManager;
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Parcelable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,20 +25,11 @@ import com.example.lyz.asyncTasks.AsyncTaskCompleteListener;
 import com.example.lyz.asyncTasks.FetchMovieDataTask;
 import com.example.lyz.data.FavoriteMovieContract;
 import com.example.lyz.entities.Movie;
-import com.example.lyz.utils.ImagePathHelper;
-import com.example.lyz.utils.JsonUtils;
-import com.example.lyz.utils.NetworkUtils;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * {@Link MainActivity} class for the main activity of the app
  */
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler
-,LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>{
 
     private ProgressBar mProgressBar;
     private TextView mErrorView;
@@ -91,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
-    private void loadMovieDataFromDatabase() {
-        //getSupportLoaderManager().initLoader(MOVIE_LOADER_ID,null,this);
+    private void loadMovieDataFromDatabase(MainActivity mainActivity) {
+        getSupportLoaderManager().initLoader(MOVIE_LOADER_ID,null,this);
     }
 
     /**
@@ -110,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        return new AsyncTaskLoader<Cursor>(this) {
+        return new AsyncTaskLoader<Cursor>(this){
 
             Cursor mMovieData=null;
 
@@ -123,15 +112,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                     forceLoad();
                 }
             }
-
             @Override
             public Cursor loadInBackground() {
                 try {
-                    return getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,null, null, null,null);
-                } catch (Exception e){
-                    Log.e(TAG, "Failed to retrieve data from database");
-                    e.printStackTrace();
-                    return null;
+                        return getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,null, null, null, null);
+                    } catch (Exception e){
+                        Log.e(TAG, "Failed to retrieve data from database");
+                        e.printStackTrace();
+                        return null;
                 }
             }
 
@@ -142,14 +130,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         };
     }
-
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        mMovieAdapter.swapCursor(cursor);
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        mMovieAdapter.swapCursor(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
         mMovieAdapter.swapCursor(null);
     }
 
@@ -214,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             return true;
         }
         else if (item.getItemId()==R.id.menu_item_favorites){
-            loadMovieDataFromDatabase();
+            loadMovieDataFromDatabase(this);
             return true;
         }
         else {

@@ -47,7 +47,6 @@ public class FavoriteMovieContentProvider extends ContentProvider {
         final SQLiteDatabase db = movieDbHelper.getReadableDatabase();
         int match = mUriMatcher.match(uri);
         Cursor retCursor;
-
         switch (match){
             case MOVIES:
                 retCursor=db.query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortorder);
@@ -55,7 +54,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: "+uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(),null);
+        retCursor.setNotificationUri(getContext().getContentResolver(),uri);
         return retCursor;
     }
 
