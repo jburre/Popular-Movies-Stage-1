@@ -115,7 +115,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             @Override
             public Cursor loadInBackground() {
                 try {
-                        return getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,null, null, null, null);
+                    String[] projection=new String[]{FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE,
+                            FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING, FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE,
+                            FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION, FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH,
+                            FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID, FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH
+                            };
+                        return getContentResolver().query(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,projection, null, null, null);
                     } catch (Exception e){
                         Log.e(TAG, "Failed to retrieve data from database");
                         e.printStackTrace();
