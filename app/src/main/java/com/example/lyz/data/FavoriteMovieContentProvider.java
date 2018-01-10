@@ -9,8 +9,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import static com.example.lyz.data.FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME;
 
@@ -19,6 +21,9 @@ import static com.example.lyz.data.FavoriteMovieContract.FavoriteMovieEntry.TABL
  */
 
 public class FavoriteMovieContentProvider extends ContentProvider {
+
+    public static final String TAG = FavoriteMovieContentProvider.class.getName();
+
 
     public static final int MOVIES=100;
     public static final int MOVIE_WITH_ID=101;
@@ -74,6 +79,7 @@ public class FavoriteMovieContentProvider extends ContentProvider {
         switch (match){
             case MOVIES:
                 long id = db.insert(TABLE_NAME, null, contentValues);
+                Log.i(TAG, "Inserted movie with id: "+id);
                 if (id>0){
                     returnUri =ContentUris.withAppendedId(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,id);
                 }

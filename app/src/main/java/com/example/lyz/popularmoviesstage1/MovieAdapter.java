@@ -91,6 +91,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             int totalImagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH);
             int titleIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE);
             int descriptionIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION);
+            int movieCount=0;
+            if (mCursor.moveToFirst()){
+                do{
+                    tempMovies[movieCount].setId(Long.valueOf(mCursor.getString(idIndex)));
+                    tempMovies[movieCount].setReleaseDate(mCursor.getString(releaseIndex));
+                    tempMovies[movieCount].setImagePath(mCursor.getString(imagePathIndex));
+                    tempMovies[movieCount].setTotalImagePath(mCursor.getString(totalImagePathIndex));
+                    tempMovies[movieCount].setRating(Double.valueOf(mCursor.getString(ratingIndex)));
+                    tempMovies[movieCount].setTitle(mCursor.getString(titleIndex));
+                    tempMovies[movieCount].setDescription(mCursor.getString(descriptionIndex));
+                    movieCount++;
+                }while (cursor.moveToNext());
+            }
+            mCursor.close();
+            /*
             for (int i=0;i<mCursor.getCount();i++){
                 mCursor.moveToPosition(i);
                 tempMovies[i].setId(Long.valueOf(mCursor.getString(idIndex)));
@@ -100,7 +115,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 tempMovies[i].setRating(Double.valueOf(mCursor.getString(ratingIndex)));
                 tempMovies[i].setTitle(mCursor.getString(titleIndex));
                 tempMovies[i].setDescription(mCursor.getString(descriptionIndex));
-            }
+            }*/
             this.setMovies(tempMovies);
         }
     }
