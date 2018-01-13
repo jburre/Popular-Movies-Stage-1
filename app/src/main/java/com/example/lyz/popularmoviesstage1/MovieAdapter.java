@@ -80,44 +80,40 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return movies.length;
     }
 
-    public void swapCursor(Cursor cursor) {
+    public boolean swapCursor(Cursor cursor) {
         if (cursor!=mCursor){
-            this.mCursor=cursor;
-            Movie []tempMovies = new Movie[mCursor.getCount()];
-            int idIndex= mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID);
-            int releaseIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE);
-            int imagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH);
-            int ratingIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING);
-            int totalImagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH);
-            int titleIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE);
-            int descriptionIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION);
-            int movieCount=0;
-            if (mCursor.moveToFirst()){
-                do{
-                    tempMovies[movieCount].setId(Long.valueOf(mCursor.getString(idIndex)));
-                    tempMovies[movieCount].setReleaseDate(mCursor.getString(releaseIndex));
-                    tempMovies[movieCount].setImagePath(mCursor.getString(imagePathIndex));
-                    tempMovies[movieCount].setTotalImagePath(mCursor.getString(totalImagePathIndex));
-                    tempMovies[movieCount].setRating(Double.valueOf(mCursor.getString(ratingIndex)));
-                    tempMovies[movieCount].setTitle(mCursor.getString(titleIndex));
-                    tempMovies[movieCount].setDescription(mCursor.getString(descriptionIndex));
-                    movieCount++;
-                }while (cursor.moveToNext());
+            if (cursor!=null&&cursor.getCount()>0){
+                this.mCursor=cursor;
+                Movie []tempMovies = new Movie[mCursor.getCount()];
+                int idIndex= mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID);
+                int releaseIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RELEASEDATE);
+                int imagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_IMAGEPATH);
+                int ratingIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_RATING);
+                int totalImagePathIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TOTALIMAGEPATH);
+                int titleIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE);
+                int descriptionIndex=mCursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_DESCRIPTION);
+                int movieCount=0;
+                if (mCursor.moveToFirst()){
+                    do{
+                        tempMovies[movieCount]=new Movie();
+                        String movieId =mCursor.getString(idIndex);
+                        String rating = mCursor.getString(ratingIndex);
+                        tempMovies[movieCount].setId(Long.valueOf(movieId));
+                        tempMovies[movieCount].setReleaseDate(mCursor.getString(releaseIndex));
+                        tempMovies[movieCount].setImagePath(mCursor.getString(imagePathIndex));
+                        tempMovies[movieCount].setTotalImagePath(mCursor.getString(totalImagePathIndex));
+                        tempMovies[movieCount].setRating(Double.valueOf(rating));
+                        tempMovies[movieCount].setTitle(mCursor.getString(titleIndex));
+                        tempMovies[movieCount].setDescription(mCursor.getString(descriptionIndex));
+                        movieCount++;
+                    }while (cursor.moveToNext());
+                }
+                mCursor.close();
+                this.setMovies(tempMovies);
+                return true;
             }
-            mCursor.close();
-            /*
-            for (int i=0;i<mCursor.getCount();i++){
-                mCursor.moveToPosition(i);
-                tempMovies[i].setId(Long.valueOf(mCursor.getString(idIndex)));
-                tempMovies[i].setReleaseDate(mCursor.getString(releaseIndex));
-                tempMovies[i].setImagePath(mCursor.getString(imagePathIndex));
-                tempMovies[i].setTotalImagePath(mCursor.getString(totalImagePathIndex));
-                tempMovies[i].setRating(Double.valueOf(mCursor.getString(ratingIndex)));
-                tempMovies[i].setTitle(mCursor.getString(titleIndex));
-                tempMovies[i].setDescription(mCursor.getString(descriptionIndex));
-            }*/
-            this.setMovies(tempMovies);
         }
+        return false;
     }
 
     /**

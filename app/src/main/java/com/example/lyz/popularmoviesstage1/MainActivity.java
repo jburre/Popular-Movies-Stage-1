@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             mRecyclerView.setLayoutManager(layoutManager);
             mMovieAdapter=new MovieAdapter(this);
             mRecyclerView.setAdapter(mMovieAdapter);
+            layoutManager.onSaveInstanceState();
             try{
                 loadMovieData(getString(R.string.sortOrderTopRated));
             } catch (Exception e){
@@ -137,7 +138,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        mMovieAdapter.swapCursor(data);
+        if (mMovieAdapter.swapCursor(data)){
+            showMoviePictures();
+        } else {
+            showErrorMessage();
+        }
     }
 
     @Override
@@ -188,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
      */
     private void showMoviePictures(){
         this.mErrorView.setVisibility(View.INVISIBLE);
+        this.mProgressBar.setVisibility(View.INVISIBLE);
         this.mRecyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -225,4 +231,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         inflater.inflate(R.menu.main,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
 }
