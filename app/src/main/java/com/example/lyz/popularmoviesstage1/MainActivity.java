@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -35,8 +36,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private TextView mErrorView;
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
+    private GridLayoutManager layoutManager;
     private static final int MOVIE_LOADER_ID=0;
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String LIFECYCLE_CALLBACKS="onSaveInstanceState";
+    private static final String LIFECYCLE_MOVIES="movies";
 
     /**
      * method for creating the activity
@@ -50,17 +54,44 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mErrorView=(TextView)findViewById(R.id.main_tv_error);
         mRecyclerView=(RecyclerView)findViewById(R.id.recyclerview_movie);
         mRecyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager;
-            layoutManager = new GridLayoutManager(this, 2);
-            mRecyclerView.setLayoutManager(layoutManager);
-            mMovieAdapter=new MovieAdapter(this);
-            mRecyclerView.setAdapter(mMovieAdapter);
-            layoutManager.onSaveInstanceState();
+        mMovieAdapter=new MovieAdapter(this);
+        layoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mMovieAdapter);
+        if (savedInstanceState!=null){
+            if (savedInstanceState.containsKey(LIFECYCLE_CALLBACKS)&&savedInstanceState.containsKey(LIFECYCLE_MOVIES)){
+                restorePreviousState(savedInstanceState);
+            }
+        } else {
             try{
                 loadMovieData(getString(R.string.sortOrderTopRated));
             } catch (Exception e){
                 Toast.makeText(this,R.string.main_loading_error,Toast.LENGTH_LONG);
             }
+        }
+    }
+
+    /**
+     * method to save the state of the activity during the android lifecycle
+     * @param outState the state that will hold the state of the activity
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable state= layoutManager.onSaveInstanceState();
+        outState.putParcelable(LIFECYCLE_CALLBACKS,state);
+        outState.putParcelableArray(LIFECYCLE_MOVIES,mMovieAdapter.getMovies());
+    }
+
+    /**
+     * method to restore the previous state of the activity
+     * @param savedInstanceState the saved state of the activity
+     */
+    private void restorePreviousState(Bundle savedInstanceState) {
+        Parcelable state = savedInstanceState.getParcelable(LIFECYCLE_CALLBACKS);
+        mRecyclerView.getLayoutManager().onRestoreInstanceState(state);
+        Parcelable[]movies = savedInstanceState.getParcelableArray(LIFECYCLE_MOVIES);
+        mMovieAdapter.setMovies(movies);
     }
 
     /**
@@ -81,7 +112,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
-    private void loadMovieDataFromDatabase(MainActivity mainActivity) {
+    /**
+     * helper method to initialize the loading from the content provider
+     */
+    private void loadMovieDataFromDatabase() {
         getSupportLoaderManager().initLoader(MOVIE_LOADER_ID,null,this);
     }
 
@@ -98,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         startActivity(startIntent);
     }
 
+    /**
+     * creation method for loader
+     * @param id
+     * @param bundle current used bundle
+     * @return a new AsyncTaskLoader
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         return new AsyncTaskLoader<Cursor>(this){
@@ -145,6 +185,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
+    /**
+     * method to reset the cursor
+     * @param loader current used loader in the class
+     */
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
         mMovieAdapter.swapCursor(null);
@@ -171,11 +215,17 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
+    /**
+     * helper method to show the loading of the activity
+     */
     private void showLoadingScreen(){
         mProgressBar.setVisibility(View.VISIBLE);
         mErrorView.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * helper method to end progressbar and errorview
+     */
     private void endLoadingScreen(){
         mProgressBar.setVisibility(View.INVISIBLE);
         mErrorView.setVisibility(View.INVISIBLE);
@@ -187,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private void showErrorMessage(){
         this.mErrorView.setVisibility(View.VISIBLE);
     }
+
 
     /**
      * method for showing up the pictures
@@ -212,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             return true;
         }
         else if (item.getItemId()==R.id.menu_item_favorites){
-            loadMovieDataFromDatabase(this);
+            loadMovieDataFromDatabase();
             return true;
         }
         else {
@@ -230,12 +281,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         MenuInflater inflater = new MenuInflater(this);
         inflater.inflate(R.menu.main,menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
     }
 
 }

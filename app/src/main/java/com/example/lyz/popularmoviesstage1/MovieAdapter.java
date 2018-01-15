@@ -2,6 +2,7 @@ package com.example.lyz.popularmoviesstage1;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +13,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.lyz.data.FavoriteMovieContract;
 import com.example.lyz.entities.Movie;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Lyz on 02.12.2017.
@@ -34,6 +31,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private Context context;
 
     private Cursor mCursor;
+
+    private static final String TAG = MovieAdapter.class.getName();
 
     /**
      * method for creating the viewholder
@@ -80,6 +79,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return movies.length;
     }
 
+    /**
+     * method to change the displayed movies if the database is being called
+     * @param cursor cursor that holds the movies requested by query
+     * @return true if the change was successful else false
+     */
     public boolean swapCursor(Cursor cursor) {
         if (cursor!=mCursor){
             if (cursor!=null&&cursor.getCount()>0){
@@ -114,6 +118,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
             }
         }
         return false;
+    }
+
+    /**
+     * helper method to set the movies based on a parcelable array
+     * @param tempMovies the parcelable array
+     */
+    public void setMovies(Parcelable[] tempMovies) {
+        this.movies= (Movie[]) tempMovies;
     }
 
     /**
@@ -167,4 +179,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         }
     }
 
+    /**
+     * getter method
+     * @return returns the movie array
+     */
+    public Movie[] getMovies() {
+        return movies;
+    }
 }

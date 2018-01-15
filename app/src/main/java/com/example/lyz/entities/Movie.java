@@ -7,7 +7,6 @@ package com.example.lyz.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 /**
  * an movie class representing the wanted data and making it easy to store
@@ -46,7 +45,7 @@ public class Movie implements Parcelable{
     /**
      * necessary CREATOR for Parcelable
      */
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+    public static final Creator CREATOR = new Creator<Movie>() {
         /**
          * creates a Movie by a parcel
          * @param in
