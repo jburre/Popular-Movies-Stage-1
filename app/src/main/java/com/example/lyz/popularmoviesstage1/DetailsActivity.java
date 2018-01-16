@@ -73,31 +73,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
-        mProgressBar=(ProgressBar)findViewById(R.id.pg_detail);
-        mTitle=(TextView)findViewById(R.id.detail_title_content);
-        mRating=(TextView)findViewById(R.id.detail_rating_content);
-        mSummary=(TextView)findViewById(R.id.detail_summary_content);
-        mImageView=(ImageView)findViewById(R.id.detail_image_view);
-
-        mTitleHeader=(TextView)findViewById(R.id.detail_title);
-        mRatingHeader=(TextView)findViewById(R.id.detail_rating);
-        mSummaryHeader=(TextView)findViewById(R.id.detail_summary);
-        mReleaseDate=(TextView)findViewById(R.id.detail_release_date_content);
-        mReleaseDateHeader=(TextView)findViewById(R.id.detail_release_date);
-        mTrailerView =(RecyclerView)findViewById(R.id.recyclerview_trailer);
-        layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        mTrailerAdapter= new TrailerAdapter(this);
-        mTrailerView.setLayoutManager(layoutManager);
-        mTrailerView.setAdapter(mTrailerAdapter);
-
-        mReviewsView= (RecyclerView)findViewById(R.id.recyclerview_reviews);
-
-        reviewLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        mReviewsView.setLayoutManager(reviewLayoutManager);
-        mReviewsAdapter=new ReviewsAdapter();
-        mReviewsView.setAdapter(mReviewsAdapter);
-
+        setupLayout();
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected=activeNetwork!=null&&activeNetwork.isConnectedOrConnecting();
@@ -144,6 +120,40 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
     }
 
+    /**
+     * method to help setup the layout
+     */
+    private void setupLayout() {
+        setContentView(R.layout.activity_details);
+        mProgressBar=(ProgressBar)findViewById(R.id.pg_detail);
+        mTitle=(TextView)findViewById(R.id.detail_title_content);
+        mRating=(TextView)findViewById(R.id.detail_rating_content);
+        mSummary=(TextView)findViewById(R.id.detail_summary_content);
+        mImageView=(ImageView)findViewById(R.id.detail_image_view);
+
+        mTitleHeader=(TextView)findViewById(R.id.detail_title);
+        mRatingHeader=(TextView)findViewById(R.id.detail_rating);
+        mSummaryHeader=(TextView)findViewById(R.id.detail_summary);
+        mReleaseDate=(TextView)findViewById(R.id.detail_release_date_content);
+        mReleaseDateHeader=(TextView)findViewById(R.id.detail_release_date);
+        mTrailerView =(RecyclerView)findViewById(R.id.recyclerview_trailer);
+        layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mTrailerAdapter= new TrailerAdapter(this);
+        mTrailerView.setLayoutManager(layoutManager);
+        mTrailerView.setAdapter(mTrailerAdapter);
+
+        mReviewsView= (RecyclerView)findViewById(R.id.recyclerview_reviews);
+
+        reviewLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mReviewsView.setLayoutManager(reviewLayoutManager);
+        mReviewsAdapter=new ReviewsAdapter();
+        mReviewsView.setAdapter(mReviewsAdapter);
+    }
+
+    /**
+     * method to restore the contents of the details activity
+     * @param savedInstanceState the saved state of the activity
+     */
     private void restoreDetailActivity(Bundle savedInstanceState) {
         this.movie=savedInstanceState.getParcelable(LIFECYCLE_MOVIE);
         this.mTrailerAdapter.setKeys(savedInstanceState.getStringArray(LIFECYCLE_TRAILER_CONTENT));
@@ -228,6 +238,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
     }
 
+    /**
+     * helper class to retrieve data from the api
+     */
     private class FetchMovieReviewsTaskListener implements AsyncTaskCompleteListener <String[]>{
 
         @Override
@@ -235,6 +248,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
             //nothing to do since both tasks are already wrapped in a loading
         }
 
+        /**
+         * implementation of the AsyncCompletelistener. Binds the results to the adapter
+         * @param result
+         */
         @Override
         public void onTaskComplete(String[] result) {
             if (result==null||result.length==0){
@@ -261,7 +278,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_TITLE, movie.getTitle());
         Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovieEntry.CONTENT_URI,contentValues);
         if (uri!=null){
-            Toast.makeText(getBaseContext(), "Movie inserted with uri: "+uri, Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), getString(R.string.favoriteResponse), Toast.LENGTH_LONG).show();
         }
     }
 }

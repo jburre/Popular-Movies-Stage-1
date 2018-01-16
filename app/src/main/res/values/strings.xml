@@ -14,6 +14,7 @@
     <string name="main_loading_error">It seems you do not have an internet connection :(</string>
     <!-- details activity data resources-->
 
+    <string name="favoriteResponse">Added to favourites</string>
     <!--query url for database connection -->
     <string name="baseQueryPopularMovies">https://api.themoviedb.org/3/movie/popular</string>
     <string name="baseQueryTopRatedMovies">https://api.themoviedb.org/3/movie/top_rated</string>
