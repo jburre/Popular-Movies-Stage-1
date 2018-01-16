@@ -67,15 +67,17 @@ public class JsonUtils {
         return movies;
     }
 
-    public static ArrayList<String> getMovieTrailerDataFromJsonString(String response) throws JSONException {
+    public static String[] getMovieTrailerDataFromJsonString(String response) throws JSONException {
         if (response!=null && response.length()!=0){
             JSONObject totalTrailersJson = new JSONObject(response);
             JSONArray resultArray=totalTrailersJson.getJSONArray(RESULT);
-            ArrayList<String> keys= new ArrayList<>();
+            String[] keys = new String[resultArray.length()];
+            int keyCounter=0;
             for (int i=0;i<resultArray.length();i++){
                 JSONObject tempMovie = (JSONObject) resultArray.get(i);
                 if (("Trailer").equals(tempMovie.getString("type"))&&("YouTube").equals(tempMovie.getString("site"))){
-                    keys.add(tempMovie.getString("key"));
+                    keys[keyCounter]=tempMovie.getString("key");
+                    keyCounter++;
                 }
             }
             return keys;

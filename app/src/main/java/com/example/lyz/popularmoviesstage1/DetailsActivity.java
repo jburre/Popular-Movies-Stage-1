@@ -58,9 +58,18 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
     private RecyclerView mReviewsView;
     private ReviewsAdapter mReviewsAdapter;
-
+    private LinearLayoutManager layoutManager;
+    private LinearLayoutManager reviewLayoutManager;
     private Movie movie;
 
+    private static final String LIFECYCLE_MOVIE="movie";
+    private static final String LIFECYCLE_TRAILER_CONTENT="trailer content";
+    private static final String LIFECYCLE_REVIEWS="reviews";
+
+    /**
+     * creator method
+     * @param savedInstanceState the sved state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,51 +86,94 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         mReleaseDate=(TextView)findViewById(R.id.detail_release_date_content);
         mReleaseDateHeader=(TextView)findViewById(R.id.detail_release_date);
         mTrailerView =(RecyclerView)findViewById(R.id.recyclerview_trailer);
-        LinearLayoutManager layoutManager;
         layoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mTrailerAdapter= new TrailerAdapter(this);
         mTrailerView.setLayoutManager(layoutManager);
         mTrailerView.setAdapter(mTrailerAdapter);
 
         mReviewsView= (RecyclerView)findViewById(R.id.recyclerview_reviews);
-        LinearLayoutManager reviewLayoutManager;
+
         reviewLayoutManager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mReviewsView.setLayoutManager(reviewLayoutManager);
         mReviewsAdapter=new ReviewsAdapter();
         mReviewsView.setAdapter(mReviewsAdapter);
 
-        Intent intentThatStartedThisActivity=getIntent();
-        if (intentThatStartedThisActivity!=null){
-            if(intentThatStartedThisActivity.hasExtra("movie")){
-                this.movie = intentThatStartedThisActivity.getParcelableExtra("movie");
-                Log.d("MOVIE:",movie.toString());
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected=activeNetwork!=null&&activeNetwork.isConnectedOrConnecting();
+
+        if (savedInstanceState!=null){
+            if (savedInstanceState.containsKey(LIFECYCLE_MOVIE)
+                    && savedInstanceState.containsKey(LIFECYCLE_TRAILER_CONTENT)
+            && savedInstanceState.containsKey(LIFECYCLE_REVIEWS)){
+                restoreDetailActivity(savedInstanceState);
                 mTitle.setText(movie.getTitle());
                 mRating.setText(String.valueOf(movie.getRating()));
                 mSummary.setText(movie.getDescription());
                 mReleaseDate.setText(movie.getReleaseDate());
-                ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                boolean isConnected=activeNetwork!=null&&activeNetwork.isConnectedOrConnecting();
                 if (isConnected==true){
                     mProgressBar.setVisibility(View.VISIBLE);
                     loadMovieImage(movie);
-                    loadTrailer(movie.getId());
-                    loadReviews(movie.getId());
                     mProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     showErrorMessage();
                 }
             }
-            else {
+        } else {
+            Intent intentThatStartedThisActivity=getIntent();
+            if (intentThatStartedThisActivity!=null){
+                if(intentThatStartedThisActivity.hasExtra("movie")){
+                    this.movie = intentThatStartedThisActivity.getParcelableExtra("movie");
+                    mTitle.setText(movie.getTitle());
+                    mRating.setText(String.valueOf(movie.getRating()));
+                    mSummary.setText(movie.getDescription());
+                    mReleaseDate.setText(movie.getReleaseDate());
+                    if (isConnected==true){
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        loadMovieImage(movie);
+                        loadTrailer(movie.getId());
+                        loadReviews(movie.getId());
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    } else {
+                    showErrorMessage();
+                    }
+                }
+            } else {
                 showErrorMessage();
             }
         }
     }
 
+    private void restoreDetailActivity(Bundle savedInstanceState) {
+        this.movie=savedInstanceState.getParcelable(LIFECYCLE_MOVIE);
+        this.mTrailerAdapter.setKeys(savedInstanceState.getStringArray(LIFECYCLE_TRAILER_CONTENT));
+        this.mReviewsAdapter.setReviews(savedInstanceState.getStringArray(LIFECYCLE_REVIEWS));
+    }
+
+    /**
+     * saves the state during the android lifecycle
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(LIFECYCLE_MOVIE,this.movie);
+        outState.putStringArray(LIFECYCLE_TRAILER_CONTENT, mTrailerAdapter.getKeys());
+        outState.putStringArray(LIFECYCLE_REVIEWS,mReviewsAdapter.getReviews());
+    }
+
+    /**
+     * helper method to retrieve the reviews for the movie
+     * @param id the movie id based on the api
+     */
     private void loadReviews(long id) {
         new FetchMovieReviewsTask(this, new FetchMovieReviewsTaskListener()).execute(String.valueOf(id));
     }
 
+    /**
+     * helper method to retrieve the trailer for the movie
+     * @param id the movie id based on the api
+     */
     private void loadTrailer(long id) {
         new FetchMovieTrailerTask(this, new FetchMovieTrailerTaskListener()).execute(String.valueOf(id));
     }
@@ -135,6 +187,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
                 .into(mImageView);
     }
 
+    /**
+     * method to show an error if something has happened
+     */
     public void showErrorMessage(){
         mProgressBar.setVisibility(View.INVISIBLE);
         mTitle.setVisibility(View.INVISIBLE);
@@ -158,7 +213,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
     }
 
-    private class FetchMovieTrailerTaskListener implements AsyncTaskCompleteListener <ArrayList<String>>{
+    private class FetchMovieTrailerTaskListener implements AsyncTaskCompleteListener <String[]>{
 
         @Override
         public void onPreExecuting() {
@@ -166,13 +221,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
 
         @Override
-        public void onTaskComplete(ArrayList result) {
-            if (result.size()!=0){
+        public void onTaskComplete(String[] result) {
+            if (result.length!=0){
                     mTrailerAdapter.setKeys(result);
-            } else {
-                showErrorMessage();
             }
-
         }
     }
 
@@ -194,6 +246,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
     }
 
+    /**
+     * adds a movie to the database
+     * @param view
+     */
     public void onFavoriteSelected(View view){
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIEID, String.valueOf(movie.getId()));

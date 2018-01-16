@@ -51,6 +51,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
         notifyDataSetChanged();
     }
 
+    public String[] getReviews(){
+        return this.reviews;
+    }
+
     public class ReviewsAdapterViewHolder extends RecyclerView.ViewHolder {
         private TextView mReviewTextView;
 

@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Lyz on 29.12.2017.
  */
 
-public class FetchMovieTrailerTask extends AsyncTask <String, Void, List<String>>{
+public class FetchMovieTrailerTask extends AsyncTask <String, Void, String[]>{
 
     private Context context;
 
@@ -35,14 +35,14 @@ public class FetchMovieTrailerTask extends AsyncTask <String, Void, List<String>
     }
 
     @Override
-    protected List<String> doInBackground(String... strings) {
+    protected String[] doInBackground(String... strings) {
         if (strings.length==0){
             return null;
         }
         String movieId=strings[0];
         URL movieTrailerURL = NetworkUtils.builtMovieTrailerURL(movieId,context);
         String response=null;
-        ArrayList<String> keys=null;
+        String[] keys=null;
         try{
             response = NetworkUtils.getNetworkResponse(movieTrailerURL);
             keys = JsonUtils.getMovieTrailerDataFromJsonString(response);
@@ -57,7 +57,7 @@ public class FetchMovieTrailerTask extends AsyncTask <String, Void, List<String>
     }
 
     @Override
-    protected void onPostExecute(List <String> keys) {
+    protected void onPostExecute(String[] keys) {
         super.onPostExecute(keys);
         listener.onTaskComplete(keys);
     }

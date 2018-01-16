@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerAdapterViewHolder>{
-    private ArrayList<String> keys;
+    private String[] keys;
+
     private final TrailerOnClickHandler mClickHandler;
     private Context context;
 
@@ -22,9 +23,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         this.mClickHandler=clickHandler;
     }
 
-    public void setKeys(ArrayList<String> keys) {
+    public void setKeys(String[] keys) {
         this.keys = keys;
         notifyDataSetChanged();
+    }
+
+    public String[] getKeys() {
+        return keys;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
 
     @Override
     public void onBindViewHolder(TrailerAdapterViewHolder holder, int position) {
-        String key = keys.get(position);
+        String key = keys[position];
         TextView textView = holder.mTrailerTextView;
         position=position+1;
         textView.append(" "+position);
@@ -50,7 +55,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         if (keys==null){
             return 0;
         }
-        return keys.size();
+        return keys.length;
     }
 
     public interface TrailerOnClickHandler {
@@ -70,7 +75,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerA
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            String key = keys.get(position);
+            String key = keys[position];
             mClickHandler.onClick(key);
         }
     }
