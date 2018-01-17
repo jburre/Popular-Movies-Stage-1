@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.lyz.popularmoviesstage1.MainActivity"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/colorBackground">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

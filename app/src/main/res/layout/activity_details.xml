@@ -9,7 +9,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.lyz.popularmoviesstage1.DetailsActivity">
+        tools:context="com.example.lyz.popularmoviesstage1.DetailsActivity"
+        android:background="@color/colorBackground">
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -48,7 +49,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/detailView_title"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/textColor"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_image_view"
@@ -65,6 +66,7 @@
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:visibility="visible"
+                android:textColor="@color/textColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_image_view"
                 app:layout_constraintTop_toBottomOf="@+id/detail_title" />
@@ -77,7 +79,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/detailView_rating"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/textColor"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_image_view"
@@ -93,24 +95,35 @@
                 android:layout_marginTop="8dp"
                 android:textAlignment="center"
                 android:textSize="14sp"
+                android:textColor="@color/textColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_image_view"
                 app:layout_constraintTop_toBottomOf="@+id/detail_rating"
                 android:visibility="visible"/>
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorSpacer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+
             <TextView
                 android:id="@+id/detail_summary"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/detailView_overview"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/textColor"
                 android:textSize="24sp"
                 android:visibility="visible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_image_view" />
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
             <TextView
                 android:id="@+id/detail_summary_content"
@@ -121,6 +134,7 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="monospace"
                 android:visibility="visible"
+                android:textColor="@color/textColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_summary" />
@@ -133,7 +147,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/detailView_releaseDate"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/textColor"
                 android:textSize="24sp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,6 +165,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/detail_image_view"
                 app:layout_constraintTop_toBottomOf="@+id/detail_release_date"
+                android:textColor="@color/textColor"
                 android:visibility="visible"/>
 
             <android.support.v7.widget.RecyclerView
@@ -179,17 +194,12 @@
                 android:id="@+id/imageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/detail_summary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/detail_release_date"
-                app:layout_constraintTop_toBottomOf="@+id/detail_summary"
-                app:srcCompat="@android:drawable/star_big_on"
-                android:onClick="onFavoriteSelected"/>
+                android:layout_marginTop="24dp"
+                android:onClick="onFavoriteSelected"
+                app:layout_constraintEnd_toEndOf="@+id/detail_release_date_content"
+                app:layout_constraintStart_toStartOf="@+id/detail_release_date_content"
+                app:layout_constraintTop_toBottomOf="@+id/detail_release_date_content"
+                app:srcCompat="@android:drawable/star_big_on" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
