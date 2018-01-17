@@ -84,8 +84,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * @param cursor cursor that holds the movies requested by query
      * @return true if the change was successful else false
      */
-    public boolean swapCursor(Cursor cursor) {
-        if (cursor!=mCursor){
+    public boolean loadDataFromCursor(Cursor cursor) {
             if (cursor!=null&&cursor.getCount()>0){
                 this.mCursor=cursor;
                 Movie []tempMovies = new Movie[mCursor.getCount()];
@@ -112,12 +111,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                         movieCount++;
                     }while (cursor.moveToNext());
                 }
-                mCursor.close();
                 this.setMovies(tempMovies);
                 return true;
+            } else {
+                return false;
             }
-        }
-        return false;
     }
 
     /**

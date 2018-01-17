@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        if (mMovieAdapter.swapCursor(data)){
+        if (mMovieAdapter.loadDataFromCursor(data)){
             showMoviePictures();
         } else {
             showErrorMessage();
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
      */
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        mMovieAdapter.swapCursor(null);
+        mMovieAdapter.loadDataFromCursor(null);
     }
 
     /**
